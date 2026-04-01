@@ -1,0 +1,7 @@
+node_modules/
+dist/
+reports/videos/
+reports/screenshots/
+reports/cucumber-report.html
+reports/cucumber-report.json
+*.webm
