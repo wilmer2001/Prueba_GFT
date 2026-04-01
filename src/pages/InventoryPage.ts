@@ -1,20 +1,23 @@
-import { Page } from '@playwright/test';
+import { Page, Locator } from '@playwright/test';
 
 export class InventoryPage {
-  private readonly addToCartButton = '[data-test^="add-to-cart"]';
-  private readonly cartLink = '[data-test="shopping-cart-link"]';
+  private readonly addToCartButton: Locator;
+  private readonly cartLink: Locator;
 
-  constructor(private readonly page: Page) {}
+  constructor(private readonly page: Page) {
+    this.addToCartButton = page.getByRole('button', { name: 'Add to cart' }).first();
+    this.cartLink        = page.locator('[data-test="shopping-cart-link"]');
+  }
 
   async isOnInventoryPage(): Promise<boolean> {
     return this.page.url().includes('/inventory.html');
   }
 
   async addFirstProductToCart(): Promise<void> {
-    await this.page.locator(this.addToCartButton).first().click();
+    await this.addToCartButton.click();
   }
 
   async goToCart(): Promise<void> {
-    await this.page.click(this.cartLink);
+    await this.cartLink.click();
   }
 }
