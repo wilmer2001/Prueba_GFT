@@ -1,24 +1,29 @@
-import { Page } from '@playwright/test';
+import { Page, Locator } from '@playwright/test';
 
 export class LoginPage {
-  private readonly usernameInput = '[data-test="username"]';
-  private readonly passwordInput = '[data-test="password"]';
-  private readonly loginButton = '[data-test="login-button"]';
-  private readonly errorMessage = '[data-test="error"]';
+  private readonly usernameInput: Locator;
+  private readonly passwordInput: Locator;
+  private readonly loginButton: Locator;
+  private readonly errorMessage: Locator;
 
-  constructor(private readonly page: Page) {}
+  constructor(private readonly page: Page) {
+    this.usernameInput = page.getByPlaceholder('Username');
+    this.passwordInput = page.getByPlaceholder('Password');
+    this.loginButton   = page.getByRole('button', { name: 'Login' });
+    this.errorMessage  = page.locator('[data-test="error"]');
+  }
 
   async navigate(): Promise<void> {
     await this.page.goto('https://www.saucedemo.com/');
   }
 
   async login(username: string, password: string): Promise<void> {
-    await this.page.fill(this.usernameInput, username);
-    await this.page.fill(this.passwordInput, password);
-    await this.page.click(this.loginButton);
+    await this.usernameInput.fill(username);
+    await this.passwordInput.fill(password);
+    await this.loginButton.click();
   }
 
   async getErrorMessage(): Promise<string> {
-    return (await this.page.locator(this.errorMessage).textContent()) ?? '';
+    return (await this.errorMessage.textContent()) ?? '';
   }
 }
